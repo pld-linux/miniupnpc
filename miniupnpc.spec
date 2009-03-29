@@ -100,3 +100,6 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc pymoduletest.py testupnpigd.py
 %{py_sitedir}/miniupnpc.so
+%if "%{py_ver}" > "2.4"
+%{py_sitedir}/miniupnpc-*.egg-info
+%endif
