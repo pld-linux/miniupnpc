@@ -1,7 +1,7 @@
 Summary:	MiniUPnP client and a library
 Name:		miniupnpc
 Version:	1.2
-Release:	0.1
+Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
@@ -60,7 +60,8 @@ export CFLAGS="%{rpmcflags}"
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_mandir}/man3
 %{__make} install \
-	INSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix}
+	INSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix} \
+	INSTALLDIRLIB=$RPM_BUILD_ROOT%{_libdir}
 
 # let SONAME be the symlink
 mv $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{3,3.0.0}
