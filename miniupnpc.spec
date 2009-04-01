@@ -1,13 +1,14 @@
 Summary:	MiniUPnP client and a library
 Name:		miniupnpc
 Version:	1.2
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	004864b69d2fbdb787e56c095607f6dd
 URL:		http://miniupnp.tuxfamily.org/
 BuildRequires:	python-devel
+BuildRequires:	/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -65,7 +66,7 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man3
 
 # let SONAME be the symlink
 mv $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{3,3.0.0}
-ldconfig -n $RPM_BUILD_ROOT%{_libdir}
+/sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
 
 cp -a man3/miniupnpc.3 $RPM_BUILD_ROOT%{_mandir}/man3
 
