@@ -1,7 +1,7 @@
 Summary:	MiniUPnP client and a library
 Name:		miniupnpc
 Version:	1.2
-Release:	2
+Release:	3
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
