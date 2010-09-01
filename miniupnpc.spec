@@ -1,13 +1,14 @@
 Summary:	MiniUPnP client and a library
 Name:		miniupnpc
-Version:	1.2
-Release:	3
+Version:	1.4
+Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	004864b69d2fbdb787e56c095607f6dd
+# Source0-md5:	e8de10c42d64e77c321e57400d50e7e4
 URL:		http://miniupnp.tuxfamily.org/
 BuildRequires:	python-devel
+BuildRequires:	rpm-pythonprov
 BuildRequires:	/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -65,7 +66,7 @@ install -d $RPM_BUILD_ROOT%{_mandir}/man3
 	INSTALLDIRLIB=$RPM_BUILD_ROOT%{_libdir}
 
 # let SONAME be the symlink
-mv $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{3,3.0.0}
+mv $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{4,4.0.0}
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
 
 cp -a man3/miniupnpc.3 $RPM_BUILD_ROOT%{_mandir}/man3
@@ -85,7 +86,7 @@ rm -rf $RPM_BUILD_ROOT
 %doc Changelog.txt README LICENCE
 %attr(755,root,root) %{_bindir}/upnpc
 %attr(755,root,root) %{_libdir}/libminiupnpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.3
+%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.4
 
 %files devel
 %defattr(644,root,root,755)
