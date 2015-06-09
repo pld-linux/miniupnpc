@@ -2,7 +2,7 @@ Summary:	MiniUPnP client and a library
 Summary(pl.UTF-8):	Program i biblioteka kliencka MiniUPnP
 Name:		miniupnpc
 Version:	1.7
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
