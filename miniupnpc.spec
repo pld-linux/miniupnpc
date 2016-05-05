@@ -2,7 +2,7 @@ Summary:	MiniUPnP client and a library
 Summary(pl.UTF-8):	Program i biblioteka kliencka MiniUPnP
 Name:		miniupnpc
 Version:	1.7
-Release:	3
+Release:	4
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
@@ -64,7 +64,7 @@ Wiązanie Pythona do biblioteki miniupnpc.
 	CFLAGS="%{rpmcflags} -fPIC -Wall -DNDEBUG -DMINIUPNPC_SET_SOCKET_TIMEOUT -D_BSD_SOURCE -D_POSIX_C_SOURCE=1"
 
 export CFLAGS="%{rpmcflags}"
-%{__python} setup.py build
+%py_build
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -80,9 +80,7 @@ mv $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{8,8.0.0}
 
 #cp -a man3/miniupnpc.3 $RPM_BUILD_ROOT%{_mandir}/man3
 
-%{__python} setup.py install \
-	--optimize=2 \
-	--root=$RPM_BUILD_ROOT
+%py_install
 
 %clean
 rm -rf $RPM_BUILD_ROOT
