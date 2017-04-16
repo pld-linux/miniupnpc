@@ -1,15 +1,22 @@
+#
+# Conditional build:
+%bcond_without	python2	# CPython 2.x module
+%bcond_without	python3	# CPython 3.x module
+
 Summary:	MiniUPnP client and a library
 Summary(pl.UTF-8):	Program i biblioteka kliencka MiniUPnP
 Name:		miniupnpc
-Version:	1.7
-Release:	4
+Version:	2.0
+Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	297bee441b56af87c6622fc4002179fd
+# Source0-md5:	2acc4ec912c15447a40cf14ae50df7b9
 URL:		http://miniupnp.tuxfamily.org/
-BuildRequires:	python-devel
+%{?with_python2:BuildRequires:	python-devel >= 2}
+%{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
 BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	/sbin/ldconfig
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -44,16 +51,30 @@ Static miniupnpc library.
 Statyczna biblioteka miniupnpc.
 
 %package -n python-miniupnpc
-Summary:	Python binding for miniupnpc library
-Summary(pl.UTF-8):	Wiązanie Pythona do biblioteki miniupnpc
+Summary:	Python 2 binding for miniupnpc library
+Summary(pl.UTF-8):	Wiązanie Pythona 2 do biblioteki miniupnpc
 Group:		Development/Languages/Python
 Requires:	%{name} = %{version}-%{release}
+Requires:	python-libs
 
 %description -n python-miniupnpc
-Python binding for miniupnpc library.
+Python 2 binding for miniupnpc library.
 
 %description -n python-miniupnpc -l pl.UTF-8
-Wiązanie Pythona do biblioteki miniupnpc.
+Wiązanie Pythona 2 do biblioteki miniupnpc.
+
+%package -n python3-miniupnpc
+Summary:	Python 3 binding for miniupnpc library
+Summary(pl.UTF-8):	Wiązanie Pythona 3 do biblioteki miniupnpc
+Group:		Development/Languages/Python
+Requires:	%{name} = %{version}-%{release}
+Requires:	python3-libs >= 1:3.2
+
+%description -n python3-miniupnpc
+Python 3 binding for miniupnpc library.
+
+%description -n python3-miniupnpc -l pl.UTF-8
+Wiązanie Pythona 3 do biblioteki miniupnpc.
 
 %prep
 %setup -q
@@ -61,26 +82,34 @@ Wiązanie Pythona do biblioteki miniupnpc.
 %build
 %{__make} \
 	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} -fPIC -Wall -DNDEBUG -DMINIUPNPC_SET_SOCKET_TIMEOUT -D_BSD_SOURCE -D_POSIX_C_SOURCE=1"
+	CFLAGS="%{rpmcflags} -fPIC -Wall -DMINIUPNPC_SET_SOCKET_TIMEOUT -DMINIUPNPC_GET_SRC_ADDR -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600"
 
-export CFLAGS="%{rpmcflags}"
+%if %{with python2}
 %py_build
+%endif
+
+%if %{with python3}
+%py3_build
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
-#install -d $RPM_BUILD_ROOT%{_mandir}/man3
 
 %{__make} install \
 	INSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix} \
 	INSTALLDIRLIB=$RPM_BUILD_ROOT%{_libdir}
 
 # let SONAME be the symlink
-mv $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{8,8.0.0}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{16,16.0.0}
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
 
-#cp -a man3/miniupnpc.3 $RPM_BUILD_ROOT%{_mandir}/man3
-
+%if %{with python2}
 %py_install
+%endif
+
+%if %{with python3}
+%py3_install
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -90,11 +119,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc Changelog.txt README LICENSE
+%doc Changelog.txt LICENSE README apiversions.txt
 %attr(755,root,root) %{_bindir}/external-ip
 %attr(755,root,root) %{_bindir}/upnpc
 %attr(755,root,root) %{_libdir}/libminiupnpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.8
+%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.16
 
 %files devel
 %defattr(644,root,root,755)
@@ -107,10 +136,20 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %{_libdir}/libminiupnpc.a
 
+%if %{with python2}
 %files -n python-miniupnpc
 %defattr(644,root,root,755)
 %doc pymoduletest.py testupnpigd.py
 %attr(755,root,root) %{py_sitedir}/miniupnpc.so
 %if "%{py_ver}" > "2.4"
-%{py_sitedir}/miniupnpc-*.egg-info
+%{py_sitedir}/miniupnpc-%{version}-py*.egg-info
+%endif
+%endif
+
+%if %{with python3}
+%files -n python3-miniupnpc
+%defattr(644,root,root,755)
+%doc pymoduletest.py testupnpigd.py
+%attr(755,root,root) %{py3_sitedir}/miniupnpc.cpython-*.so
+%{py3_sitedir}/miniupnpc-%{version}-py*.egg-info
 %endif
