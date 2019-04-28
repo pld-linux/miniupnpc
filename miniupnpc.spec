@@ -98,7 +98,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	INSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix} \
-	DIRLIB=%{_lib}
+	LIBDIR=%{_lib}
 
 # let SONAME be the symlink
 %{__mv} $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{17,17.0.0}
