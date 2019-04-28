@@ -6,12 +6,12 @@
 Summary:	MiniUPnP client and a library
 Summary(pl.UTF-8):	Program i biblioteka kliencka MiniUPnP
 Name:		miniupnpc
-Version:	2.0
-Release:	2
+Version:	2.1
+Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	2acc4ec912c15447a40cf14ae50df7b9
+# Source0-md5:	80143183f743d402459095711b1ce793
 URL:		http://miniupnp.tuxfamily.org/
 %{?with_python2:BuildRequires:	python-devel >= 2}
 %{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
@@ -82,7 +82,8 @@ Wiązanie Pythona 3 do biblioteki miniupnpc.
 %build
 %{__make} \
 	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} -fPIC -Wall -DMINIUPNPC_SET_SOCKET_TIMEOUT -DMINIUPNPC_GET_SRC_ADDR -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600"
+	CFLAGS="%{rpmcflags} -fPIC -Wall -DMINIUPNPC_SET_SOCKET_TIMEOUT -DMINIUPNPC_GET_SRC_ADDR -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600" \
+	LIBDIR=%{_lib}
 
 %if %{with python2}
 %py_build
@@ -97,10 +98,10 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	INSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix} \
-	INSTALLDIRLIB=$RPM_BUILD_ROOT%{_libdir}
+	DIRLIB=%{_lib}
 
 # let SONAME be the symlink
-%{__mv} $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{16,16.0.0}
+%{__mv} $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{17,17.0.0}
 /sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
 
 %if %{with python2}
@@ -123,13 +124,14 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/external-ip
 %attr(755,root,root) %{_bindir}/upnpc
 %attr(755,root,root) %{_libdir}/libminiupnpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.16
+%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.17
 
 %files devel
 %defattr(644,root,root,755)
 %doc upnpc.c
 %attr(755,root,root) %{_libdir}/libminiupnpc.so
 %{_includedir}/miniupnpc
+%{_pkgconfigdir}/miniupnpc.pc
 %{_mandir}/man3/miniupnpc.3*
 
 %files static
