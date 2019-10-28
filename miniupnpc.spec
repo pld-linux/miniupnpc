@@ -13,8 +13,14 @@ Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
 # Source0-md5:	80143183f743d402459095711b1ce793
 URL:		http://miniupnp.tuxfamily.org/
-%{?with_python2:BuildRequires:	python-devel >= 2}
-%{?with_python3:BuildRequires:	python3-devel >= 1:3.2}
+%if %{with python2}
+BuildRequires:	python-devel >= 2
+BuildRequires:	python-setuptools
+%endif
+%if %{with python3}
+BuildRequires:	python3-devel >= 1:3.2
+BuildRequires:	python3-setuptools
+%endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 BuildRequires:	/sbin/ldconfig
