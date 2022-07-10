@@ -6,15 +6,16 @@
 Summary:	MiniUPnP client and a library
 Summary(pl.UTF-8):	Program i biblioteka kliencka MiniUPnP
 Name:		miniupnpc
-Version:	2.1
-Release:	6
+Version:	2.2.3
+Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	80143183f743d402459095711b1ce793
+# Source0-md5:	4a037c6f22861d58e037fcb0bdc5922e
+Patch0:		%{name}-make.patch
 URL:		http://miniupnp.tuxfamily.org/
 %if %{with python2}
-BuildRequires:	python-devel >= 2
+BuildRequires:	python-devel >= 1:2.5
 BuildRequires:	python-setuptools
 %endif
 %if %{with python3}
@@ -84,11 +85,15 @@ Wiązanie Pythona 3 do biblioteki miniupnpc.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
+# there is also cmake support, but also not up to date (see cmake patch in Fedora)'
+CFLAGS="%{rpmcflags}" \
+CPPFLAGS="%{rpmcppflags}" \
+LDFLAGS="%{rpmldflags}" \
 %{__make} \
 	CC="%{__cc}" \
-	CFLAGS="%{rpmcflags} -fPIC -Wall -DMINIUPNPC_SET_SOCKET_TIMEOUT -DMINIUPNPC_GET_SRC_ADDR -D_DEFAULT_SOURCE -D_XOPEN_SOURCE=600" \
 	LIBDIR=%{_lib}
 
 %if %{with python2}
@@ -103,7 +108,7 @@ Wiązanie Pythona 3 do biblioteki miniupnpc.
 rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
-	INSTALLPREFIX=$RPM_BUILD_ROOT%{_prefix} \
+	DESTDIR=$RPM_BUILD_ROOT \
 	LIBDIR=%{_lib}
 
 # let SONAME be the symlink
@@ -134,7 +139,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
-%doc upnpc.c
 %attr(755,root,root) %{_libdir}/libminiupnpc.so
 %{_includedir}/miniupnpc
 %{_pkgconfigdir}/miniupnpc.pc
@@ -149,9 +153,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc pymoduletest.py testupnpigd.py
 %attr(755,root,root) %{py_sitedir}/miniupnpc.so
-%if "%{py_ver}" > "2.4"
 %{py_sitedir}/miniupnpc-%{version}-py*.egg-info
-%endif
 %endif
 
 %if %{with python3}
