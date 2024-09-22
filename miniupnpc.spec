@@ -6,13 +6,12 @@
 Summary:	MiniUPnP client and a library
 Summary(pl.UTF-8):	Program i biblioteka kliencka MiniUPnP
 Name:		miniupnpc
-Version:	2.2.3
+Version:	2.2.8
 Release:	1
 License:	BSD
 Group:		Libraries
 Source0:	http://miniupnp.tuxfamily.org/files/%{name}-%{version}.tar.gz
-# Source0-md5:	4a037c6f22861d58e037fcb0bdc5922e
-Patch0:		%{name}-make.patch
+# Source0-md5:	e0ef02aecfa0de558c6f4579b6c5205c
 URL:		http://miniupnp.tuxfamily.org/
 %if %{with python2}
 BuildRequires:	python-devel >= 1:2.5
@@ -85,7 +84,6 @@ Wiązanie Pythona 3 do biblioteki miniupnpc.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 # there is also cmake support, but also not up to date (see cmake patch in Fedora)'
@@ -111,10 +109,6 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT \
 	LIBDIR=%{_lib}
 
-# let SONAME be the symlink
-%{__mv} $RPM_BUILD_ROOT%{_libdir}/libminiupnpc.so.{17,17.0.0}
-/sbin/ldconfig -n $RPM_BUILD_ROOT%{_libdir}
-
 %if %{with python2}
 %py_install
 %endif
@@ -133,9 +127,9 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc Changelog.txt LICENSE README apiversions.txt
 %attr(755,root,root) %{_bindir}/external-ip
+%attr(755,root,root) %{_bindir}/upnp-listdevices
 %attr(755,root,root) %{_bindir}/upnpc
-%attr(755,root,root) %{_libdir}/libminiupnpc.so.*.*.*
-%attr(755,root,root) %ghost %{_libdir}/libminiupnpc.so.17
+%attr(755,root,root) %{_libdir}/libminiupnpc.so.18
 
 %files devel
 %defattr(644,root,root,755)
